@@ -1,10 +1,11 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {TicketService} from "../../../services/tickets/ticket.service";
 import {ITour, ITourTypeSelect} from "../../../models/tours";
-import { Router} from "@angular/router";
+import { ActivatedRoute, Router} from "@angular/router";
 import {TiсketsStorageService} from "../../../services/tiсkets-storage/tiсkets-storage.service";
 import {BlockStyleDirective} from "../../../directive/block-style.directive";
 import {debounceTime, fromEvent, Subscription} from "rxjs";
+import { UserService } from 'src/app/services/user/user.service';
 
 
 @Component({
@@ -29,10 +30,14 @@ export class TicketListComponent implements OnInit {
   constructor(private ticketService: TicketService,
               private router: Router,
               private ticketStorage: TiсketsStorageService,
+              private route: ActivatedRoute,
+              private userService: UserService,
+              private cdref: ChangeDetectorRef
              ) { }
 
   
   ngOnInit(): void {
+    this.userService.setToken('user-private-token');
     this.ticketService.getTickets().subscribe(
       (data) => {
         this.tickets = data; 
@@ -96,6 +101,7 @@ export class TicketListComponent implements OnInit {
   ngOnDestroy() {
     this.tourUnsubscriber.unsubscribe();
     this.searchTicketSub.unsubscribe();
+    this.userService.removeToken();
   }
 
 

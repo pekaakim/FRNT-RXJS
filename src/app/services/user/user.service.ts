@@ -38,7 +38,7 @@ export class UserService {
   this.token = null;
 
   }
-/*     removeToken(): void{
+    removeToken(): void{
     window.localStorage.removeItem('user_token');
-   } */
+   }
 }
